@@ -330,7 +330,6 @@ public class EFrame {
 
 	public static JPanel buildCenterPanel() {
 		JPanel cPanel = new JPanel() ;
-		//cPanel.setBackground();
 		cPanel.setLayout(new GridLayout(2, 2));
 
 		cPanel.add(new JScrollPane(mainArea)) ;
