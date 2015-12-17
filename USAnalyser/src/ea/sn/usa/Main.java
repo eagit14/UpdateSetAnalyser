@@ -5,6 +5,8 @@
  */
 package ea.sn.usa;
 
+import ea.sn.ui.EFrame;
+
 /**
  *
  * @author elie.abdelnour
@@ -16,6 +18,8 @@ public class Main {
      */
     public static void main(String[] args) {
         System.out.print("Hello World - enhancement");
+        EFrame myFrame = new EFrame();
+        myFrame.buildAndShowFrame();
     }
     
 }
