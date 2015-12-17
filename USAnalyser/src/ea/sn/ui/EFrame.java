@@ -133,11 +133,8 @@ public class EFrame {
 		String[] postChoices = { "Params", "Envelope" };
 		postMethod = new JComboBox<>(postChoices);
 		postMethod.setSelectedIndex(0);
-		//jendPoint = new JTextField("https://lafamrdev.service-now.com/u_web_cdk_poc.do?SOAP") ;
-		//jendPoint = new JTextField("http://www.webservicex.net/stockquote.asmx") ;
-		//jendPoint = new JTextField("https://kiss.service-now.com/incident.do?SOAP") ;
-		//jendPoint = new JTextField("https://empeabdelnour.service-now.com/em_event.do?SOAP") ;
-		jendPoint = new JTextField("https://silvadev.service-now.com/sys_update_set.do?SOAP") ;
+		jendPoint = new JTextField("https://empeabdelnour.service-now.com/em_event.do?SOAP") ;
+		
 		
 			
 		postMethod.addActionListener (new ActionListener () {
@@ -159,7 +156,7 @@ public class EFrame {
 		
 		if (initialize) {
 			username = new JTextField("elie.abdelnour.admin") ;
-			password = new JPasswordField("Highhopes") ;
+			password = new JPasswordField("") ;
 			proxyHost = new JTextField("") ;
 			proxyPort = new  JTextField("") ;
 		} else {
