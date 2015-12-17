@@ -345,7 +345,6 @@ public class EFrame {
 		panel.setLayout(new GridLayout(3, 4));
 
 		JLabel jlabel = new JLabel("SOAP Endpoint") ;
-//		jlabel.setPreferredSize(new Dimension(10, 20));
 		
 		panel.add(jlabel) ;
 		panel.add(jendPoint) ;
