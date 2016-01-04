@@ -1,4 +1,4 @@
-package ea.sn.main;
+package ea.sn.main.tbr;
 import ea.sn.ui.EFrame;
 
 public class Main {

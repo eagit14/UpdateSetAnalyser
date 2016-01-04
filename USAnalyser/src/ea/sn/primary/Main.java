@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ea.sn.usa;
+package ea.sn.primary;
 
 import ea.sn.ui.EFrame;
 
