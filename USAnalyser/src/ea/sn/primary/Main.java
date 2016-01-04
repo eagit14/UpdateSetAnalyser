@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ea.sn.usa;
+package ea.sn.primary;
 
 import ea.sn.ui.EFrame;
 
@@ -17,7 +17,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.print("Starting Webnow - Master branch");
+        System.out.print("Starting Webnow - US Comparator branch");
         EFrame myFrame = new EFrame();
         myFrame.buildAndShowFrame();
     }

@@ -29,7 +29,7 @@ public class TwilioPanel {
 	JTextArea msgArea;
 	
 	public TwilioPanel() {
-		System.out.println("Initizalizing twilio panel");
+	     System.out.println("Initizalizing twilio panel");
 	     toField = new  JTextField();
 	     toField.setText("+33629874490");
 	     msgArea = new JTextArea() ;
