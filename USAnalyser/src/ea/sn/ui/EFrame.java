@@ -61,6 +61,7 @@ public class EFrame {
     static JTextField usEndPoint1;
     static JTextField usEndPoint2;
     static JTextField usEndPoint3;
+    static JTextField usEndPoint4;
     static JTextField outputDir;
     static JPasswordField password;
     static JTextArea mainArea;
@@ -184,15 +185,12 @@ public class EFrame {
         gridComparisonArea.setLineWrap(true);
 
         gridComparisonPanel = new JPanel();
-        //gridComparisonPanel.setLayout(new GridLayout(144, 4));
-        //gridComparisonPanel.add(new JButton("Update Set"));
-        //gridComparisonPanel.add(new JButton("I1"));
-        //gridComparisonPanel.add(new JButton("I2"));
-        //gridComparisonPanel.add(new JButton("I3"));
+        gridComparisonPanel.setPreferredSize(new Dimension(400, 10000));
         
-        usEndPoint1 = new JTextField("");
-        usEndPoint2 = new JTextField("");
-        usEndPoint3 = new JTextField("");
+        usEndPoint1 = new JTextField("https://silvadev.service-now.com/sys_update_set.do?SOAP");
+        usEndPoint2 = new JTextField("https://silvaft.service-now.com/sys_update_set.do?SOAP");
+        usEndPoint3 = new JTextField("https://silvastg.service-now.com/sys_update_set.do?SOAP");
+        usEndPoint4 = new JTextField("https://silva.service-now.com/sys_update_set.do?SOAP");
         MyMenu mm = new MyMenu(mainArea, logger);
         frame.setJMenuBar(mm.getMenuBar());
     }
@@ -209,10 +207,14 @@ public class EFrame {
         return usEndPoint2;
     }
     
-     public static JTextField getUsEndPoint3() {
+    public static JTextField getUsEndPoint3() {
         return usEndPoint3;
     }
-            
+    
+    public static JTextField getUsEndPoint4() {
+        return usEndPoint4;
+    }
+         
     public static void setUsername(JTextField username) {
         EFrame.username = username;
     }
@@ -328,7 +330,7 @@ public class EFrame {
     }
 
     public void buildAndShowFrame() {
-        frame.setPreferredSize(new Dimension(sizeX, sizeY));
+        //frame.setPreferredSize(new Dimension(sizeX, sizeY));
         frame.setMinimumSize(new Dimension(sizeX, sizeY));
         frame.setLocationRelativeTo(null);
         frame.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -461,15 +463,16 @@ public class EFrame {
         JPanel panel = new JPanel();
 
         panel.setBackground(new Color(0, 240, 0));
-        panel.setLayout(new GridLayout(3, 2));
+        panel.setLayout(new GridLayout(4, 2));
 
-        panel.add(new JLabel("Instance1 (ex: fill DEV for DEV.service-now.com)"));
+        panel.add(new JLabel("Instance1"));
         panel.add(usEndPoint1);
-        panel.add(new JLabel("Instance2 (ex: fill QUA for QUA.service-now.com)"));
+        panel.add(new JLabel("Instance2"));
         panel.add(usEndPoint2);
-        panel.add(new JLabel("Instance3 (ex: fill PRD for PRD.service-now.com)"));
+        panel.add(new JLabel("Instance3"));
         panel.add(usEndPoint3);
-
+        panel.add(new JLabel("Instance4"));
+        panel.add(usEndPoint4);
         return panel;
     }
 
@@ -500,12 +503,13 @@ public class EFrame {
         //US Comparison panel
         JPanel usComparatorPanel = new JPanel();
         usComparatorPanel.setLayout(new BorderLayout());
+        //usComparatorPanel.setPreferredSize(new Dimension(400,200));
         usComparatorPanel.add(buildInstPanel(), BorderLayout.PAGE_START);
         //usComparatorPanel.add(gridComparisonArea, BorderLayout.CENTER);
         JScrollPane usScrollPane = new JScrollPane(gridComparisonPanel);
         usScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         usScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        usScrollPane.setPreferredSize(new Dimension(1000, 1000));
+        //usScrollPane.setPreferredSize(new Dimension(1000, 1000));
         usComparatorPanel.add(usScrollPane, BorderLayout.CENTER);
 
         ELogger usLogger = new ELogger();
@@ -582,7 +586,7 @@ public class EFrame {
         tabbedPane.addTab("Comparator", null, usComparatorPanel, "Compare update set");
         tabbedPane.setMnemonicAt(3, KeyEvent.VK_3);
 
-        tabbedPane.setSelectedIndex(0);
+        tabbedPane.setSelectedIndex(3);
         pane.add(tabbedPane);
 
     }
