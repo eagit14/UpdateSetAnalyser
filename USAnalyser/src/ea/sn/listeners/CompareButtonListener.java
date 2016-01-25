@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -72,23 +73,22 @@ public class CompareButtonListener implements ActionListener {
     private String getTag(String line, String tagName) {
         int index1, index2;
         String rValue = "";
-        System.out.println("Tag" + tagName + " , Line is : " + line);
         index1 = line.indexOf("<" + tagName + ">");
         index2 = line.indexOf("</" + tagName + ">");
 
         rValue = line.substring(index1 + tagName.length() + 2, index2);
-        System.out.println("rValue " + rValue);
         return rValue;
     }
 
     public void getUS(String snInstance, List<String> envList, List<UpdateSet> envUSList) {
-        String sUser = EFrame.getUsername().getText();
-        char[] sPassword = EFrame.getPassword().getPassword();
+        //String sUser = EFrame.getUsername().getText();
+        //char[] sPassword = EFrame.getPassword().getPassword();
+        String sUser = EFrame.getUSUsername().getText();
+        char[] sPassword = EFrame.getUSPassword().getPassword();
         String soapAction = "getRecords";
         String filteredAnswer = "";
 
-        System.out.println("Starting Compare : Username= " + sUser + " , pass = " + sPassword + " end = " + snInstance);
-
+        //System.out.println("Starting Compare : Username= " + sUser + " , pass = " + sPassword + " end = " + snInstance);
         //Sending SOAP request
         ESoapManager soap = new ESoapManager(snInstance, soapAction, null);
         soap.setLogger(logger);
@@ -103,9 +103,7 @@ public class CompareButtonListener implements ActionListener {
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            String name = "";
-            String state = "";
-            String sys_id = "";
+            String name = "", state = "", sys_id = "", createdOn = "", createdBy = "";
             if (line.contains("<name>")) {
                 name = getTag(line.trim(), "name");
                 envList.add(name);
@@ -125,6 +123,19 @@ public class CompareButtonListener implements ActionListener {
                 updateSet.setSysid(sys_id);
                 envUSList.add(updateSet);
             }
+
+            if (line.contains("<sys_created_on>")) {
+                createdOn = getTag(line.trim(), "sys_created_on");
+                updateSet.setCreatedOn(createdOn);
+                envUSList.add(updateSet);
+            }
+
+            if (line.contains("<sys_created_by>")) {
+                createdBy = getTag(line.trim(), "sys_created_by");
+                updateSet.setCreatedBy(createdBy);
+                envUSList.add(updateSet);
+            }
+
         }
         scanner.close();
         //System.out.println(filteredAnswer);
@@ -139,12 +150,11 @@ public class CompareButtonListener implements ActionListener {
         return button;
     }
 
-    public JButton JGreenButton(String str, String sysID , String name, String instance) {
-        //https://silvadev.service-now.com/sys_update_set.do?sys_id=8d82fb5d37341200aefa8d2754990ea0
+    public JButton JGreenButton(String str, String sysID, String tooltip, String instance) {
         JButton button = new JButton(str);
         button.setBackground(Color.green);
         button.setOpaque(true);
-        button.setToolTipText(name + " / " + sysID);
+        button.setToolTipText(tooltip);
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 URI uri;
@@ -173,16 +183,76 @@ public class CompareButtonListener implements ActionListener {
         return null;
     }
 
+    public JButton renderButton(List<String> arrayList, List<UpdateSet> arrayUSList, String endPoint, String uniqListValue) {
+        String foundInArray = "|N";
+        JButton newButton;
+        if (arrayList.contains(uniqListValue)) {
+            foundInArray = "|Y";
+            UpdateSet us = getUSObject(arrayUSList, uniqListValue);
+            String tooltip = us.getName() + " / " + us.getSysid() + " / " + us.getCreatedBy() + " / " + us.getCreatedOn();
+            String buttonName = "FOUND (" + us.getState() + ")";
+            newButton = JGreenButton(buttonName, us.getSysid(), tooltip, endPoint);
+        } else {
+            newButton = JRedButton("NOT FOUND");
+        }
+        return newButton;
+    }
+
+    public void addButtonsToFrame(List<JButton> allButtons) {
+        int gridLines = (allButtons.size() / 5) + 1;
+        /*Because there are 5 columns */
+
+        EFrame.getgridComparisonPanel().setLayout(new GridLayout(gridLines, 5));
+
+        EFrame.getgridComparisonPanel().add(new JLabel("Update Set Name"));
+        EFrame.getgridComparisonPanel().add(new JLabel("Instance 1"));
+        EFrame.getgridComparisonPanel().add(new JLabel("Instance 2"));
+        EFrame.getgridComparisonPanel().add(new JLabel("Instance 3"));
+        EFrame.getgridComparisonPanel().add(new JLabel("Instance 4"));
+
+        for (JButton buttonIterator : allButtons) {
+            EFrame.getgridComparisonPanel().add(buttonIterator);
+        }
+    }
+
+    public void emptyAllLists(){
+        env1List.clear();
+        env2List.clear();
+        env3List.clear();
+        env4List.clear();
+        env1USList.clear();
+        env2USList.clear();
+        env3USList.clear();
+        env4USList.clear();
+        fullList.clear();
+        fullListUniq.clear();
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("********* In COMPARE Listener");
         EFrame.getgridComparisonPanel().removeAll();
         EFrame.getgridComparisonPanel().revalidate();
+        List<JButton> allButtons = new ArrayList<>();
+        emptyAllLists(); 
+        
+        String inst1 = EFrame.getUsEndPoint1().getText();
+        String inst2 = EFrame.getUsEndPoint2().getText();
+        String inst3 = EFrame.getUsEndPoint3().getText();
+        String inst4 = EFrame.getUsEndPoint4().getText();
+        String result = "";
 
-        getUS(EFrame.getUsEndPoint1().getText(), env1List, env1USList);
-        getUS(EFrame.getUsEndPoint2().getText(), env2List, env2USList);
-        getUS(EFrame.getUsEndPoint3().getText(), env3List, env3USList);
-        getUS(EFrame.getUsEndPoint4().getText(), env4List, env4USList);
+        if (inst1 != null && !inst1.isEmpty()) {
+            getUS(inst1, env1List, env1USList);
+        }
+        if (inst2 != null && !inst2.isEmpty()) {
+            getUS(inst2, env2List, env2USList);
+        }
+        if (inst3 != null && !inst3.isEmpty()) {
+            getUS(inst3, env3List, env3USList);
+        }
+        if (inst4 != null && !inst4.isEmpty()) {
+            getUS(inst4, env4List, env4USList);
+        }
 
         //merge all update sets
         fullList.addAll(env1List);
@@ -196,66 +266,51 @@ public class CompareButtonListener implements ActionListener {
             fullListUniq.add(uniqValue);
         }
 
-        String result = "";
-        int gridLines = fullListUniq.size() + 1;
-        EFrame.getgridComparisonPanel().setLayout(new GridLayout(gridLines, 5));
-
-        EFrame.getgridComparisonPanel().add(new JLabel("Update Set Name"));
-        EFrame.getgridComparisonPanel().add(new JLabel("Instance 1"));
-        EFrame.getgridComparisonPanel().add(new JLabel("Instance 2"));
-        EFrame.getgridComparisonPanel().add(new JLabel("Instance 3"));
-        EFrame.getgridComparisonPanel().add(new JLabel("Instance 4"));
+        Collections.sort(fullListUniq);
+        Collections.reverse(fullListUniq);
 
         int counter = 1;
+        Boolean cond = true;
         for (String uniqListValue : fullListUniq) {
 
-            String foundIn1 = "|N";
-            String foundIn2 = "|N";
-            String foundIn3 = "|N";
-            String foundIn4 = "|N";
-            EFrame.getgridComparisonPanel().add(new JButton(uniqListValue));
-            if (env1List.contains(uniqListValue)) {
-                foundIn1 = "|Y";
-                UpdateSet us = getUSObject(env1USList, uniqListValue);
-                JButton gButton = JGreenButton("FOUND (" + us.getState() + ")", us.getSysid() , us.getName(), EFrame.getUsEndPoint1().getText());
-                EFrame.getgridComparisonPanel().add(gButton);
-            } else {
-                EFrame.getgridComparisonPanel().add(JRedButton("NOT FOUND"));
+            Boolean foundIn1 = false , foundIn2 = false , foundIn3 = false , foundIn4 = false ;
+            JButton inst1Button, inst2Button, inst3Button, inst4Button;
+
+            JButton nameButton = new JButton(uniqListValue);
+            nameButton.setToolTipText("Update set number : " + counter);
+
+            inst1Button = renderButton(env1List, env1USList, inst1, uniqListValue);
+            inst2Button = renderButton(env2List, env2USList, inst2, uniqListValue);
+            inst3Button = renderButton(env3List, env3USList, inst3, uniqListValue);
+            inst4Button = renderButton(env4List, env4USList, inst4, uniqListValue);
+            
+            foundIn1 = inst1Button.getToolTipText() != null && !inst1Button.getToolTipText().isEmpty() ;
+            foundIn2 = inst2Button.getToolTipText() != null && !inst2Button.getToolTipText().isEmpty() ;
+            foundIn3 = inst3Button.getToolTipText() != null && !inst3Button.getToolTipText().isEmpty() ;
+            foundIn4 = inst4Button.getToolTipText() != null && !inst4Button.getToolTipText().isEmpty() ;
+                    
+            if (EFrame.getFilterGreen().isSelected() == true) {
+                cond = (inst1Button.getToolTipText() == null || inst1Button.getToolTipText().isEmpty())
+                        || (inst2Button.getToolTipText() == null || inst2Button.getToolTipText().isEmpty())
+                        || (inst3Button.getToolTipText() == null || inst3Button.getToolTipText().isEmpty())
+                        || (inst4Button.getToolTipText() == null || inst4Button.getToolTipText().isEmpty());
             }
 
-            if (env2List.contains(uniqListValue)) {
-                foundIn2 = "|Y";
-                UpdateSet us = getUSObject(env2USList, uniqListValue);
-                JButton gButton = JGreenButton("FOUND (" + us.getState() + ")", us.getSysid() , us.getName(), EFrame.getUsEndPoint2().getText());
-                EFrame.getgridComparisonPanel().add(gButton);
-            } else {
-                EFrame.getgridComparisonPanel().add(JRedButton("NOT FOUND"));
+            if (cond) {
+                allButtons.add(nameButton);
+                allButtons.add(inst1Button);
+                allButtons.add(inst2Button);
+                allButtons.add(inst3Button);
+                allButtons.add(inst4Button);
+                result += counter + " | " + uniqListValue + "|" + foundIn1 + "|" + foundIn2 + "|" + foundIn3 + "|" + foundIn4 + "\n";
+                counter++;
             }
-
-            if (env3List.contains(uniqListValue)) {
-                foundIn3 = "|Y";
-                UpdateSet us = getUSObject(env3USList, uniqListValue);
-                JButton gButton = JGreenButton("FOUND (" + us.getState() + ")", us.getSysid() , us.getName(), EFrame.getUsEndPoint3().getText());
-                EFrame.getgridComparisonPanel().add(gButton);
-            } else {
-                EFrame.getgridComparisonPanel().add(JRedButton("NOT FOUND"));
-            }
-
-            if (env4List.contains(uniqListValue)) {
-                foundIn4 = "|Y";
-                UpdateSet us = getUSObject(env4USList, uniqListValue);
-                JButton gButton = JGreenButton("FOUND (" + us.getState() + ")", us.getSysid(), us.getName(), EFrame.getUsEndPoint4().getText());
-                EFrame.getgridComparisonPanel().add(gButton);
-            } else {
-                EFrame.getgridComparisonPanel().add(JRedButton("NOT FOUND"));
-            }
-            //System.out.println("US -> " + uniqListValue + foundIn1 + foundIn2 + foundIn3 );
-            result += counter + " | " + uniqListValue + foundIn1 + foundIn2 + foundIn3 + foundIn4 + "\n";
-            counter++;
+            
         }
-        EFrame.getgridComparisonPanel().revalidate();
-        //EFrame.getgridComparisonArea().setText(result);
-        System.out.println(result);
 
+        addButtonsToFrame(allButtons);
+
+        EFrame.getgridComparisonPanel().revalidate();
+        System.out.println(result);
     }
 }

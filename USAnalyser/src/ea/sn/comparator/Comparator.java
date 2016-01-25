@@ -82,39 +82,6 @@ public class Comparator {
 
     public static void main(String[] args) {
         System.out.println("Comparator");
-
-        //List1
-        List<String> env1List = new ArrayList<String>();
-        env1List.add("eBay");
-        env1List.add("Paypal");
-        env1List.add("Google");
-        env1List.add("Yahoo");
-        env1List.add("Yahoo");
-
-        for (String temp : env1List) {
-            System.out.println(temp);
-        }
-
-        //List2
-        List<String> env2List = new ArrayList<String>();
-        env2List.add("Paypal");
-        env2List.add("Google");
-
-        //Join lists
-        System.out.println("NEW LIST");
-        List<String> newList = new ArrayList<String>();
-        newList.addAll(env1List);
-        newList.addAll(env2List);
-        for (String temp : newList) {
-            System.out.println(temp);
-        }
-
-        //Get uniq values
-        System.out.println("UNIQ");
-        HashSet<String> uniqueValues = new HashSet<>(newList);
-        for (String value : uniqueValues) {
-            System.out.println(value);
-        }
     }
 
 }

@@ -16,7 +16,16 @@ public class UpdateSet {
     private String state;
     private String name;
     private String sysid;
+    private String createdOn;
+    private String createdBy;
 
+    public UpdateSet() {
+        state = "";
+        name = "";
+        sysid = "";
+        createdOn = "";
+        createdBy = "";
+    }
     /**
      * @return the state
      */
@@ -59,6 +68,34 @@ public class UpdateSet {
         this.sysid = sysid;
     }
 
+    /**
+     * @return the createdOn
+     */
+    public String getCreatedOn() {
+        return createdOn;
+    }
+
+    /**
+     * @param createdOn the createdOn to set
+     */
+    public void setCreatedOn(String createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    /**
+     * @return the createdBy
+     */
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    /**
+     * @param createdBy the createdBy to set
+     */
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     @Override
     public boolean equals(Object obj) {
         //Uniqness would only be on name. update sets might have different states on different envs
@@ -84,8 +121,6 @@ public class UpdateSet {
         return true;
     }
 
-    
-
     @Override
     public int hashCode() {
         int hash = 7;
@@ -95,5 +130,4 @@ public class UpdateSet {
         return hash;
     }
 
- 
 }

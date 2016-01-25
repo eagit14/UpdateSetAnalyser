@@ -32,6 +32,7 @@ import ea.sn.listeners.CompareButtonListener;
 import ea.sn.loggers.ELogger;
 import ea.sn.loggers.Utils;
 import ea.sn.manager.ExcelManager;
+import javax.swing.JCheckBox;
 
 public class EFrame {
 
@@ -58,10 +59,13 @@ public class EFrame {
     static JTextField username;
     static JTextField proxyHost;
     static JTextField proxyPort;
+    static JTextField ususername;
+    static JPasswordField uspassword;
     static JTextField usEndPoint1;
     static JTextField usEndPoint2;
     static JTextField usEndPoint3;
     static JTextField usEndPoint4;
+    private static JCheckBox filterGreen ;
     static JTextField outputDir;
     static JPasswordField password;
     static JTextArea mainArea;
@@ -116,6 +120,20 @@ public class EFrame {
         return instances;
     }
 
+    /**
+     * @return the filterGreen
+     */
+    public static JCheckBox getFilterGreen() {
+        return filterGreen;
+    }
+
+    /**
+     * @param aFilterGreen the filterGreen to set
+     */
+    public static void setFilterGreen(JCheckBox aFilterGreen) {
+        filterGreen = aFilterGreen;
+    }
+    
     public EFrame() {
         System.out.println("*** NEW EFRAME ***");
         boolean initialize = true;
@@ -134,10 +152,6 @@ public class EFrame {
         String[] postChoices = {"Params", "Envelope"};
         postMethod = new JComboBox<>(postChoices);
         postMethod.setSelectedIndex(0);
-        //jendPoint = new JTextField("https://lafamrdev.service-now.com/u_web_cdk_poc.do?SOAP") ;
-        //jendPoint = new JTextField("http://www.webservicex.net/stockquote.asmx") ;
-        //jendPoint = new JTextField("https://kiss.service-now.com/incident.do?SOAP") ;
-        //jendPoint = new JTextField("https://empeabdelnour.service-now.com/em_event.do?SOAP") ;
         jendPoint = new JTextField("https://silvadev.service-now.com/sys_update_set.do?SOAP");
 
         postMethod.addActionListener(new ActionListener() {
@@ -158,13 +172,17 @@ public class EFrame {
         outputDir = new JTextField("/Users/elie.abdelnour/Tools/");
 
         if (initialize) {
-            username = new JTextField("elie.abdelnour.fr");
+            username = new JTextField("elie.abdelnour");
+            ususername = new JTextField("elie.abdelnour.fr");
             password = new JPasswordField("Highhopes");
+            uspassword = new JPasswordField("Highhopes");
             proxyHost = new JTextField("");
             proxyPort = new JTextField("");
         } else {
             username = new JTextField("");
+            ususername = new JTextField("");
             password = new JPasswordField("");
+            uspassword = new JPasswordField("");
             proxyHost = new JTextField("");
             proxyPort = new JTextField("");
         }
@@ -186,11 +204,13 @@ public class EFrame {
 
         gridComparisonPanel = new JPanel();
         gridComparisonPanel.setPreferredSize(new Dimension(400, 10000));
-        
+
         usEndPoint1 = new JTextField("https://silvadev.service-now.com/sys_update_set.do?SOAP");
         usEndPoint2 = new JTextField("https://silvaft.service-now.com/sys_update_set.do?SOAP");
         usEndPoint3 = new JTextField("https://silvastg.service-now.com/sys_update_set.do?SOAP");
         usEndPoint4 = new JTextField("https://silva.service-now.com/sys_update_set.do?SOAP");
+        filterGreen = new JCheckBox();
+        
         MyMenu mm = new MyMenu(mainArea, logger);
         frame.setJMenuBar(mm.getMenuBar());
     }
@@ -199,28 +219,36 @@ public class EFrame {
         return username;
     }
 
+    public static JTextField getUSUsername() {
+        return ususername;
+    }
+
     public static JTextField getUsEndPoint1() {
         return usEndPoint1;
     }
-    
+
     public static JTextField getUsEndPoint2() {
         return usEndPoint2;
     }
-    
+
     public static JTextField getUsEndPoint3() {
         return usEndPoint3;
     }
-    
+
     public static JTextField getUsEndPoint4() {
         return usEndPoint4;
     }
-         
+
     public static void setUsername(JTextField username) {
         EFrame.username = username;
     }
 
     public static JPasswordField getPassword() {
         return password;
+    }
+
+    public static JPasswordField getUSPassword() {
+        return uspassword;
     }
 
     public static void setPassword(JPasswordField password) {
@@ -262,7 +290,7 @@ public class EFrame {
     public static JPanel getgridComparisonPanel() {
         return gridComparisonPanel;
     }
-      
+
     public static JTextArea getMainAreaOutput() {
         return mainAreaOutput;
     }
@@ -383,7 +411,7 @@ public class EFrame {
 
     public static JPanel buildTab2TopPanel() {
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(0, 0, 240));
+        panel.setBackground(new Color(250, 0, 240));
         panel.setLayout(new GridLayout(1, 4));
 
         panel.add(new JLabel("Output directory"));
@@ -462,8 +490,13 @@ public class EFrame {
     public static JPanel buildInstPanel() {
         JPanel panel = new JPanel();
 
-        panel.setBackground(new Color(0, 240, 0));
-        panel.setLayout(new GridLayout(4, 2));
+        panel.setBackground(new Color(255, 153, 0));
+        panel.setLayout(new GridLayout(7, 2));
+
+        panel.add(new JLabel("Username"));
+        panel.add(ususername);
+        panel.add(new JLabel("Password"));
+        panel.add(uspassword);
 
         panel.add(new JLabel("Instance1"));
         panel.add(usEndPoint1);
@@ -473,6 +506,10 @@ public class EFrame {
         panel.add(usEndPoint3);
         panel.add(new JLabel("Instance4"));
         panel.add(usEndPoint4);
+        
+        panel.add(new JLabel("Filter Green lines?"));
+        panel.add(filterGreen);
+        
         return panel;
     }
 
@@ -530,7 +567,6 @@ public class EFrame {
                     Desktop d = Desktop.getDesktop();
                     String filename = null;
 
-                    //d.browse(new URI("https://lafamrdev.service-now.com/u_labor_type_list.do?XML"));
                     if (chosenFile == null) {
                         System.out.println("Please choose file!");
                         updateSetArea.setText("Please choose file");
@@ -544,7 +580,6 @@ public class EFrame {
                             emt.setInputFile(path);
                             filename = outputDir.getText() + "UpdateSetAnalysisResult-" + new Utils().getDateTime() + ".xls";
                             emt.setOutputFile(filename);
-                            //emt.setOutputFile("/Users/elie.abdelnour/Tools/UpdateSetAnalysisResult-" + new Utils().getDateTime() + ".xls");
                             emt.setArea(updateSetArea);
                             emt.write();
                         } catch (WriteException e1) {
@@ -574,19 +609,19 @@ public class EFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setOpaque(false);
 
-        tabbedPane.addTab("Web Service", null, webservicePanel, "SOAP Webservice");
+        tabbedPane.addTab("Comparator", null, usComparatorPanel, "Compare update set");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-        tabbedPane.addTab("Update set Analyzer", null, updateSetPanel, "Analyze update set and generate excel");
+        tabbedPane.addTab("Web Service", null, webservicePanel, "SOAP Webservice");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
-
-        tabbedPane.addTab("Twilio Integration", null, new TwilioPanel().getPanel(), "Run commands");
+        
+        tabbedPane.addTab("Update set Analyzer", null, updateSetPanel, "Analyze update set and generate excel");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
-
-        tabbedPane.addTab("Comparator", null, usComparatorPanel, "Compare update set");
-        tabbedPane.setMnemonicAt(3, KeyEvent.VK_3);
-
-        tabbedPane.setSelectedIndex(3);
+        
+        tabbedPane.addTab("Twilio Integration", null, new TwilioPanel().getPanel(), "Run commands");
+        tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
+        
+        tabbedPane.setSelectedIndex(0);
         pane.add(tabbedPane);
 
     }
