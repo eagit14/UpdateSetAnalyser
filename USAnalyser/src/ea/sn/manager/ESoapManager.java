@@ -93,11 +93,9 @@ public class ESoapManager {
     }
 
     public ESoapManager() {
-        System.out.println("*** ESOAP ***");
     }
 
     public ESoapManager(String zEndPoint, String zAction, String zEnv) {
-        System.out.println("*** ESOAP 2 ***");
         endPoint = zEndPoint;
         action = zAction;
         xmlSoapEnvelope = zEnv;
@@ -134,13 +132,13 @@ public class ESoapManager {
             }
 
             strMessage = printSOAPMessage(sm);
-            logger.log("SOAP Request: " + strMessage);
+            logger.log("SOAP Request: " + strMessage , true);
 
             //SOAPMessage soapResponse = soapConnection.call(sm, soapEndPoint);
             SOAPMessage soapResponse = soapCall(soapConnection, sm, soapEndPoint);
 
             strResponse = printSOAPMessage(soapResponse);
-            logger.log("SOAP Response: " + strResponse);
+            logger.log("SOAP Response: " + strResponse , false);
             soapConnection.close();
         } catch (Exception e) {
             StringBuilder sb = new StringBuilder(e.toString());
@@ -149,7 +147,7 @@ public class ESoapManager {
                 sb.append(ste);
             }
             strResponse = sb.toString();
-            logger.log(strResponse);
+            logger.log(strResponse, true);
             System.err.println("Error occurred while sending SOAP Request to Server");
             e.printStackTrace();
         }
@@ -254,13 +252,13 @@ public class ESoapManager {
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
         Source sourceContent = soapResponse.getSOAPPart().getContent();
-        System.out.print("\nSOAP Message = ");
+        //System.out.print("\nSOAP Message = ");
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         StreamResult result = new StreamResult(out);
 
         transformer.transform(sourceContent, result);
-        System.out.print(out);
+        //System.out.print(out);
         return out.toString();
 
     }

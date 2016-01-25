@@ -52,7 +52,6 @@ public class CompareButtonListener implements ActionListener {
     List<String> fullListUniq;
 
     public CompareButtonListener(ELogger log) {
-        System.out.println("*** CompareListener *** ");
 
         env1List = new ArrayList<String>();
         env2List = new ArrayList<String>();
@@ -88,7 +87,6 @@ public class CompareButtonListener implements ActionListener {
         String soapAction = "getRecords";
         String filteredAnswer = "";
 
-        //System.out.println("Starting Compare : Username= " + sUser + " , pass = " + sPassword + " end = " + snInstance);
         //Sending SOAP request
         ESoapManager soap = new ESoapManager(snInstance, soapAction, null);
         soap.setLogger(logger);
@@ -138,7 +136,6 @@ public class CompareButtonListener implements ActionListener {
 
         }
         scanner.close();
-        //System.out.println(filteredAnswer);
     }
 
     public JButton JRedButton(String str) {
@@ -311,6 +308,7 @@ public class CompareButtonListener implements ActionListener {
         addButtonsToFrame(allButtons);
 
         EFrame.getgridComparisonPanel().revalidate();
-        System.out.println(result);
+        logger.log(result, true);
+        
     }
 }

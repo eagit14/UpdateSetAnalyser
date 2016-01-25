@@ -29,7 +29,6 @@ public class TwilioPanel {
 	JTextArea msgArea;
 	
 	public TwilioPanel() {
-	     System.out.println("Initizalizing twilio panel");
 	     toField = new  JTextField();
 	     toField.setText("+33629874490");
 	     msgArea = new JTextArea() ;
@@ -76,7 +75,7 @@ public class TwilioPanel {
 
 					MessageFactory messageFactory = client.getAccount().getMessageFactory(); 
 					Message message = messageFactory.create(params); 
-					System.out.println(message.getSid()); 
+					//System.out.println(message.getSid()); 
 					
 					
 					//CALL
@@ -91,7 +90,6 @@ public class TwilioPanel {
 //					params.add(new BasicNameValuePair("Record", "false")); 
 //					CallFactory callFactory = client.getAccount().getCallFactory(); 
 //					Call call = callFactory.create(params); 
-//					System.out.println(call.getSid()); 
 				}
 				catch (Exception e1) {
 					e1.printStackTrace();

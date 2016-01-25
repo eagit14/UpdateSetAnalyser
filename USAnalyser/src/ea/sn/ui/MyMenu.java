@@ -19,7 +19,6 @@ public class MyMenu {
     ELogger logger;
     
 	public MyMenu(JComponent comp , ELogger log) {
-		System.out.println("*** MyMenu ***");
 		menuBar = new JMenuBar();
 		menuBar.setBackground(new Color(255,255,255));
 		parentComponent = comp;

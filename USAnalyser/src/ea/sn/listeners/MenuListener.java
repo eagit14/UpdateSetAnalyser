@@ -24,9 +24,9 @@ public class MenuListener  extends Properties  implements ActionListener{
 	JComponent mainComponent ;
 	ELogger logger;
 	
-    public MenuListener() {
-    	System.out.println("*** MenuListener ***");
-    }
+        public MenuListener() {
+            //Init menu
+        }
     
     
 	public JComponent getMainComponent() {
@@ -78,12 +78,9 @@ public class MenuListener  extends Properties  implements ActionListener{
 				frame.getContentPane().add(new JTextField(getProperty("soap.envelop.2") ));
 				frame.pack();
 				frame.setVisible(true);
-				logger.log("Open favourites");
 			} else if (act.equals("Clear main panel")) {
-				logger.log("Main panel cleared");
 				 ((JTextArea)mainComponent).setText("");
 			} else if (act.equals("Quit")) {
-				logger.log("Exit Application");
 		    	logger.close();
 		    	System.exit(0); 
 			}

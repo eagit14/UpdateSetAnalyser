@@ -46,8 +46,11 @@ public class ELogger {
 			}
 	}
 	   
-	public void log(String s)  { 
+	public void log(String s, Boolean printOut)  { 
 		try {
+                        if (printOut) {
+                            System.out.println(s);
+                        }
 			buffer.write(getTimeStamp() + " - " + s + "\n");
 			buffer.flush();
 		} catch (IOException e) {

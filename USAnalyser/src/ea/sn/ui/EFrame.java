@@ -1,6 +1,5 @@
 package ea.sn.ui;
 
-import ea.sn.comparator.Comparator;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -135,7 +134,6 @@ public class EFrame {
     }
     
     public EFrame() {
-        System.out.println("*** NEW EFRAME ***");
         boolean initialize = true;
         frame = new JFrame("Web Now 1.0!");
         sizeX = 1000;
@@ -148,7 +146,7 @@ public class EFrame {
         topPanelColor = new Color(240, 0, 0);
 
         logger = new ELogger();
-        logger.log("Building Main Frame");
+        logger.log("Building Main Frame", true);
         String[] postChoices = {"Params", "Envelope"};
         postMethod = new JComboBox<>(postChoices);
         postMethod.setSelectedIndex(0);
@@ -549,9 +547,9 @@ public class EFrame {
         //usScrollPane.setPreferredSize(new Dimension(1000, 1000));
         usComparatorPanel.add(usScrollPane, BorderLayout.CENTER);
 
-        ELogger usLogger = new ELogger();
+        //ELogger usLogger = new ELogger();
         JButton compButton = new JButton("Compare");
-        compButton.addActionListener(new CompareButtonListener(usLogger));
+        compButton.addActionListener(new CompareButtonListener(logger));
         usComparatorPanel.add(compButton, BorderLayout.LINE_END);
 
         //Update set panel
@@ -572,7 +570,7 @@ public class EFrame {
                         updateSetArea.setText("Please choose file");
                     } else {
                         String path = chosenFile.toString();
-                        System.out.println(path);
+                        logger.log("Analyzing file " + path + ", please wait... " , true);
                         updateSetArea.setText("Analyzing file " + path + ", please wait... ");
                         try {
 

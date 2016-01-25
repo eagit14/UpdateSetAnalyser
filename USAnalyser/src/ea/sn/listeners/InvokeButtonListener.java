@@ -15,7 +15,6 @@ public class InvokeButtonListener implements ActionListener{
         ELogger logger ;
     
 	public InvokeButtonListener(ELogger log) {
-		System.out.println("*** ButtonListener *** ");
 		logger = log;
 	}
 
